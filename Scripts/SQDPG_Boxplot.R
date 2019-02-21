@@ -46,31 +46,49 @@ boxplot(log(SQDPG_Mont_samp), log(SQDG_PtR_samp))
 
 
 
-SQDG_stations <- LOBdata %>% 
+SQDG_Mont <- LOBdata %>% 
   filter(species=="SQDG") %>% 
-  group_by(Station) %>%
+  group_by(Station, Depth) %>%
   summarize("Total SQDG"=sum(intensity)) %>%
-  pull(`Total SQDG`)
+  filter(Station %in% c(1,2,4,6,11)) %>%
+  pull("Total SQDG")
 
-PG_stations <- LOBdata %>%
+SQDG_PtR <- LOBdata %>% 
+  filter(species=="SQDG") %>% 
+  group_by(Station, Depth) %>%
+  summarize("Total SQDG"=sum(intensity)) %>%
+  filter(Station %in% c(7,8,9,10)) %>%
+  pull("Total SQDG")
+
+
+PG_Mont <- LOBdata %>%
   filter(species=="PG") %>% 
-  group_by(Station) %>%
+  group_by(Station, Depth) %>%
   summarize("Total PG"=sum(intensity)) %>%
-  pull(`Total PG`)
+  filter(Station %in% c(1,2,4,6,11)) %>%
+  pull("Total PG")
 
-SQDPG <- SQDG_stations/PG_stations
-loc = c(rep("Monterey", 4), rep("Point Reyes", 4), "Monterey")
+PG_PtR <- LOBdata %>% 
+  filter(species=="PG") %>% 
+  group_by(Station, Depth) %>%
+  summarize("Total PG"=sum(intensity)) %>%
+  filter(Station %in% c(7,8,9,10)) %>%
+  pull("Total PG")
 
-df <- data.frame(x=sort(unique(LOBdata$Station)), y=SQDPG, loc=loc)
 
-ggplot(data = df, aes(x=as.factor(x), y=y)) + 
-  geom_bar(stat = "identity") + 
-  facet_wrap(~loc, scales = "free_x") +
-  ylab("SQDG/PG Ratio") +
-  xlab("Station Number") +
-  theme(legend.title=element_blank(), 
-        axis.text = element_text(size = 24, face = "bold", color="black"),
-        axis.title = element_text(size = 24, face = "bold"))
+Mont <- SQDG_Mont/PG_Mont
+PtR <- SQDG_PtR/PG_PtR
 
-ggsave(filename = "SQDPG Barplot.png", device = "png", path = "Images",
-       width = 10, height = 4, units = "in")
+wilcox.test(Mont, PtR)
+
+gdata <- data.frame("SQDPG"=c(Mont, PtR), "Location"=c(rep("Monterey", length(Mont)), rep("Pt. Reyes", length(PtR))))
+
+ggplot(data = gdata) + geom_boxplot(aes(x=Location, y=SQDPG, fill=Location), lwd=2) +
+  theme_bw() + ylab("SQDG:PG Ratio\n") + xlab("") +
+  theme(legend.title=element_blank(), legend.position = "none",
+        axis.text = element_text(size = 28, face = "bold", color="black"),
+        axis.title = element_text(size = 28, face = "bold"),
+        axis.text.x = element_text(angle = 335))
+
+ggsave(filename = "SQDPG_Boxplot.png", plot = last_plot(), device = "png",
+       path = "Images", width = 3.5, height = 6.5, units = "in")
