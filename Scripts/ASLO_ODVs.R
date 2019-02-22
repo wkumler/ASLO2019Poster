@@ -40,7 +40,7 @@ ODV <- function(data, title, x.axis="n") {
                  colour = "black", 
                  alpha = 0.2, 
                  lwd = 1) +
-    scale_y_reverse() +
+    scale_y_reverse() + ylab("") +
     scale_x_continuous(breaks=long_samples_i$Station,
                        labels=paste("St. ", long_samples_i$Station)) +
     theme_bw() +
@@ -67,10 +67,10 @@ ODV <- function(data, title, x.axis="n") {
 SQDG_df <- filter(IPDAGs, species=="SQDG")
 ODV(SQDG_df, title = "SQDG abundance", x.axis = "n")
 ggsave(filename = "ODV_SQDG.png", plot = last_plot(), device = "png",
-       path = "Images", width = 10, height = 3.5, units = "in")
+       path = "Images", width = 6.5, height = 3.25, units = "in")
 
 PG_df <- filter(IPDAGs, species=="PG")
 ODV(PG_df, title = "PG abundance", x.axis = "n")
 ggsave(filename = "ODV_PG.png", plot = last_plot(), device = "png",
-       path = "Images", width = 10, height = 3.5, units = "in")
+       path = "Images", width = 6.5, height = 3.25, units = "in")
 

@@ -86,11 +86,9 @@ stacked_gp <- ordered.IPDAGs %>%
   ylab("% of total IP-DAG species") +
   xlab("Station Number") + 
   theme_bw() +
-  theme(legend.title=element_blank(), legend.position = "bottom",
-      axis.text = element_text(size = 18, face = "bold", color="black"),
-      axis.title = element_text(size = 18, face = "bold"),
-      #strip.background =element_rect(fill=c("#F8766D", "#00BFC4")),
-      legend.text = element_text(size = 16)) +
+  theme(legend.title=element_blank(), legend.position = "none",
+      axis.text = element_text(size = 24, face = "bold", color="black"),
+      axis.title = element_text(size = 24, face = "bold")) +
   scale_fill_manual(breaks = specs,
                       labels = paste0(" ", specs, "   "),
                       values = proper.colors)
@@ -98,4 +96,4 @@ stacked_gp <- ordered.IPDAGs %>%
 #Save progress
 stacked_gp
 ggsave(filename = "Stacked_IPDAGs.png", plot = stacked_gp, device = "png", 
-       path = "Images", width = 8, height = 8, units = "in")
+       path = "Images", width = 5.5, height = 5.5, units = "in")
